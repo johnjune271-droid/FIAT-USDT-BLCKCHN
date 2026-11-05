@@ -1,6 +1,4 @@
 fastapi
-uvicorn
 redis
 web3
 tronpy
-python-dotenv
