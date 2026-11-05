@@ -1,0 +1,11 @@
+[FNFCU Sender] --(1) HTTPS POST JSON envelope--> [Your API Gateway / TLS]
+                                                    |
+                                              [2. Validation: Section 7]
+                                                    |
+                                              [3. Idempotency Check: Section 9]
+                                                    |
+                                              [4. Return Section 10 Response - success/error]
+                                                    |
+                                              [5. Async Queue] --> [Settlement Worker] --> [Bank Rails / USDT Treasury]
+                                                    |
+                                              [6. Optional Status Callback]

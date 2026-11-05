@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    container_name: fnfcu-receiver-api
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+    restart: unless-stopped
+    networks:
+      - fnfcu-net
+
+  db:
+    image: postgres:15-alpine
+    container_name: fnfcu-receiver-db
+    environment:
+      POSTGRES_DB: ${DB_NAME:-fnfcu}
+      POSTGRES_USER: ${DB_USER:-fnfcu}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - fnfcu-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: fnfcu-receiver-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    restart: unless-stopped
+    networks:
+      - fnfcu-net
+
+  settlement-worker:
+    build: .
+    container_name: fnfcu-settlement-worker
+    command: ["python", "-m", "app.settlement"]
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+    restart: unless-stopped
+    networks:
+      - fnfcu-net
+
+volumes:
+  pgdata:
+  redisdata:
+
+networks:
+  fnfcu-net:
+    driver: bridge
