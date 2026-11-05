@@ -1,6 +1,2 @@
 fastapi
-uvicorn
 redis
-web3
-tronpy
-sqlalchemy
