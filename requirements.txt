@@ -1,2 +1,4 @@
 fastapi
 redis
+web3==6.15.0
+tronpy==0.6.0
